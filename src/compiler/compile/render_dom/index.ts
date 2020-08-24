@@ -525,7 +525,10 @@ export default function dom(
 		body.push(styledDeclaration);
 
 		body.push(b`
-			const ${name} = createStyledElement('${css.code && css.code.replace(/\\/g, '\\\\')}${options.dev ? `\n/*# sourceMappingURL=${css.map.toUrl()} */` : ''}');
+			const ${name} = createStyledElement('${options.css ? (
+				(css.code || '').replace(/\\/g, '\\\\')
+				+ (options.dev && `\n/*# sourceMappingURL=${css.map.toUrl()} */`)
+			) : ''}');
 		`)
 
 		if (component.tag != null) {
