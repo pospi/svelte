@@ -468,11 +468,13 @@ export default function dom(
 
 	if (options.customElement) {
 		const declaration = b`
-			class ${name} extends @SvelteElement {
+			class #${name} extends @SvelteElement {
 				constructor(options) {
 					super();
 
-					${css.code && b`this.shadowRoot.innerHTML = \`<style>${css.code.replace(/\\/g, '\\\\')}${options.dev ? `\n/*# sourceMappingURL=${css.map.toUrl()} */` : ''}</style>\`;`}
+					if (options && options._injectCSS) {
+						this.shadowRoot.innerHTML = '<style>' + options._injectCSS + '</style>';
+					}
 
 					@init(this, { target: this.shadowRoot }, ${definition}, ${has_create_fragment ? 'create_fragment': 'null'}, ${not_equal}, ${prop_indexes}, ${dirty});
 
@@ -509,6 +511,22 @@ export default function dom(
 		declaration.body.body.push(...accessors);
 
 		body.push(declaration);
+
+		const styledDeclaration = b`
+			function createStyledElement(stylesheetCSS) {
+				return class Styled extends #${name} {
+					constructor(options) {
+						super(Object.assign({}, options, { _injectCSS: stylesheetCSS }));
+					}
+				}
+			}
+		`;
+
+		body.push(styledDeclaration);
+
+		body.push(b`
+			const ${name} = createStyledElement('${css.code && css.code.replace(/\\/g, '\\\\')}${options.dev ? `\n/*# sourceMappingURL=${css.map.toUrl()} */` : ''}');
+		`)
 
 		if (component.tag != null) {
 			body.push(b`
