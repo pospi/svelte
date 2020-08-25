@@ -534,10 +534,7 @@ export default function dom(
 		body.push(styledDeclaration);
 
 		body.push(b`
-			const ${name} = ${generatorName}('${options.css ? (
-				(css.code || '').replace(/\\/g, '\\\\')
-				+ ((options.dev && `\n/*# sourceMappingURL=${css.map.toUrl()} */`) || '')
-			) : ''}');
+			const ${name} = ${generatorName}(${options.css && css.code && x`\`${css.code.replace(/\\/g, '\\\\')}${options.dev ? `\n/*# sourceMappingURL=${css.map.toUrl()} */` : ''}\``});
 		`)
 
 		if (component.tag != null) {
