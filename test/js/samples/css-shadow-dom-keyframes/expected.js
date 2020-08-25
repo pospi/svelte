@@ -56,6 +56,6 @@ export function createStyledComponent(stylesheetCSS) {
 	};
 };
 
-const Component = createStyledComponent("div{animation:foo 1s}@keyframes foo{0%{opacity:0}100%{opacity:1}}");
+const Component = createStyledComponent(`div{animation:foo 1s}@keyframes foo{0%{opacity:0}100%{opacity:1}}`);
 customElements.define("custom-element", Component);
 export default Component;
