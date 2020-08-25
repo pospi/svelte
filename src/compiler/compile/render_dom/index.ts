@@ -527,7 +527,7 @@ export default function dom(
 		body.push(b`
 			const ${name} = createStyledElement('${options.css ? (
 				(css.code || '').replace(/\\/g, '\\\\')
-				+ (options.dev && `\n/*# sourceMappingURL=${css.map.toUrl()} */`)
+				+ ((options.dev && `\n/*# sourceMappingURL=${css.map.toUrl()} */`) || '')
 			) : ''}');
 		`)
 
