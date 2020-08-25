@@ -30,10 +30,14 @@ function create_fragment(ctx) {
 	};
 }
 
-class Component extends SvelteElement {
+class ComponentUnstyled extends SvelteElement {
 	constructor(options) {
 		super();
-		this.shadowRoot.innerHTML = `<style>div{animation:foo 1s}@keyframes foo{0%{opacity:0}100%{opacity:1}}</style>`;
+
+		if (options && options._injectCSS) {
+			this.shadowRoot.innerHTML = "<style>" + options._injectCSS + "</style>";
+		}
+
 		init(this, { target: this.shadowRoot }, null, create_fragment, safe_not_equal, {});
 
 		if (options) {
@@ -44,5 +48,14 @@ class Component extends SvelteElement {
 	}
 }
 
+function createStyledComponent(stylesheetCSS) {
+	return class extends ComponentUnstyled {
+		constructor(options) {
+			super(Object.assign({}, options, { _injectCSS: stylesheetCSS }));
+		}
+	};
+}
+
+const Component = createStyledComponent("div{animation:foo 1s}@keyframes foo{0%{opacity:0}100%{opacity:1}}");
 customElements.define("custom-element", Component);
 export default Component;
