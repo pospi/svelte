@@ -48,13 +48,13 @@ class ComponentUnstyled extends SvelteElement {
 	}
 }
 
-function createStyledComponent(stylesheetCSS) {
+export function createStyledComponent(stylesheetCSS) {
 	return class extends ComponentUnstyled {
 		constructor(options) {
 			super(Object.assign({}, options, { _injectCSS: stylesheetCSS }));
 		}
 	};
-}
+};
 
 const Component = createStyledComponent("div{animation:foo 1s}@keyframes foo{0%{opacity:0}100%{opacity:1}}");
 customElements.define("custom-element", Component);

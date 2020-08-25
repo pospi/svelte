@@ -522,7 +522,7 @@ export default function dom(
 		body.push(declaration);
 
 		const styledDeclaration = b`
-			function ${generatorName} (stylesheetCSS) {
+			export function ${generatorName} (stylesheetCSS) {
 				return class extends ${unstyledName} {
 					constructor(options) {
 						super(Object.assign({}, options, { _injectCSS: stylesheetCSS }));
