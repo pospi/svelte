@@ -89,7 +89,8 @@ describe('custom-elements', function() {
 							if (id.endsWith('.svelte')) {
 								const compiled = svelte.compile(code.replace(/\r/g, ""), {
 									customElement: true,
-									dev: config.dev
+									dev: config.dev,
+									css: config.css,
 								});
 
 								compiled.warnings.forEach(w => warnings.push(w));
