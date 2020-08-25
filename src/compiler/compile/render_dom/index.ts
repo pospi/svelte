@@ -467,8 +467,17 @@ export default function dom(
 	}
 
 	if (options.customElement) {
+		const unstyledName = {
+			type: 'Identifier',
+			name: `${name.name}Unstyled`,
+		};
+		const generatorName = {
+			type: 'Identifier',
+			name: `createStyled${name.name}`,
+		};
+
 		const declaration = b`
-			class #${name} extends @SvelteElement {
+			class ${unstyledName} extends @SvelteElement {
 				constructor(options) {
 					super();
 
@@ -513,8 +522,8 @@ export default function dom(
 		body.push(declaration);
 
 		const styledDeclaration = b`
-			function createStyledElement(stylesheetCSS) {
-				return class Styled extends #${name} {
+			function ${generatorName} (stylesheetCSS) {
+				return class extends ${unstyledName} {
 					constructor(options) {
 						super(Object.assign({}, options, { _injectCSS: stylesheetCSS }));
 					}
@@ -525,7 +534,7 @@ export default function dom(
 		body.push(styledDeclaration);
 
 		body.push(b`
-			const ${name} = createStyledElement('${options.css ? (
+			const ${name} = ${generatorName}('${options.css ? (
 				(css.code || '').replace(/\\/g, '\\\\')
 				+ ((options.dev && `\n/*# sourceMappingURL=${css.map.toUrl()} */`) || '')
 			) : ''}');
