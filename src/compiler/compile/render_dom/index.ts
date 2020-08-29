@@ -473,7 +473,7 @@ export default function dom(
 		};
 		const generatorName = {
 			type: 'Identifier',
-			name: `createStyled${name.name}`,
+			name: `createStyledElement`,
 		};
 
 		const declaration = b`
